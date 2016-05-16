@@ -1,9 +1,6 @@
 package stockmarket.trade;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.internal.runners.JUnit38ClassRunner;
-import org.junit.runner.RunWith;
 
 import java.math.BigDecimal;
 import java.math.MathContext;

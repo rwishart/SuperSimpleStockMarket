@@ -20,11 +20,11 @@ public class Trade {
 
     private BigDecimal tradedPrice;
 
-    public Trade (String stockSymbol,
-                  LocalDateTime timestamp,
-                  long quantityOfShares,
-                  BuySellIndicator buySellIndicator,
-                  BigDecimal tradedPrice) {
+    public Trade (final String stockSymbol,
+                  final LocalDateTime timestamp,
+                  final long quantityOfShares,
+                  final BuySellIndicator buySellIndicator,
+                  final BigDecimal tradedPrice) {
 
         this.stockSymbol = stockSymbol;
         this.timestamp = timestamp;

@@ -1,20 +1,25 @@
 package stockmarket;
 
+
 import org.junit.Before;
 import org.junit.Test;
 import stockmarket.calulator.StockMarketCalculationService;
 import stockmarket.calulator.StockMarketCalculationServiceImpl;
+import stockmarket.stock.CommonStock;
+import stockmarket.stock.PreferredStock;
 import stockmarket.stock.Stock;
-import stockmarket.stock.StockType;
+import stockmarket.stocklisting.SimpleStockListing;
+import stockmarket.stocklisting.StockListing;
 import stockmarket.trade.BuySellIndicator;
 import stockmarket.trade.Trade;
-import stockmarket.trade.service.TradeDataService;
-import stockmarket.trade.service.TradeDataServiceImpl;
+import stockmarket.tradedata.TradeDataService;
+import stockmarket.tradedata.TradeDataServiceImpl;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -29,7 +34,7 @@ public class ITSuperSimpleStockMarket {
 
     private SuperSimpleStockMarket simpleStockMarket;
 
-    private Map<String, Stock> stockListings;
+    private StockListing listing;
 
     private TradeDataService tradeDataService;
 
@@ -38,28 +43,23 @@ public class ITSuperSimpleStockMarket {
 
         tradeDataService = new TradeDataServiceImpl();
         StockMarketCalculationService stockMarketCalculationService = new StockMarketCalculationServiceImpl();
-        stockListings = initStockListings();
-
-
-        simpleStockMarket = new SuperSimpleStockMarketImpl(tradeDataService, stockMarketCalculationService, stockListings);
+        listing = initlisting();
+        simpleStockMarket = new SuperSimpleStockMarketImpl(tradeDataService, stockMarketCalculationService, listing);
     }
 
     @Test
     public void testCalculateDividendYieldForStock() {
 
-        Stock teaStock = stockListings.get("TEA");
-        BigDecimal calculatedValue = simpleStockMarket.calculateDividendYieldForStock(teaStock, BigDecimal.TEN);
+        BigDecimal calculatedValue = simpleStockMarket.calculateDividendYieldForStock("TEA", BigDecimal.TEN);
         assertEquals(BigDecimal.ZERO, calculatedValue);
 
-        Stock popStock = stockListings.get("POP");
-        popStock.setStockPrice(BigDecimal.TEN);
-        calculatedValue = simpleStockMarket.calculateDividendYieldForStock(popStock, BigDecimal.TEN);
+        calculatedValue = simpleStockMarket.calculateDividendYieldForStock("POP", BigDecimal.TEN);
+        Stock popStock = listing.getListedStock("POP");
         assertEquals(popStock.getLastDividend().divide(BigDecimal.TEN, MathContext.DECIMAL64), calculatedValue);
 
-        Stock ginStock = stockListings.get("GIN");
-        ginStock.setStockPrice(BigDecimal.TEN);
-        calculatedValue = simpleStockMarket.calculateDividendYieldForStock(ginStock, BigDecimal.TEN);
+        calculatedValue = simpleStockMarket.calculateDividendYieldForStock("GIN", BigDecimal.TEN);
 
+        PreferredStock ginStock = (PreferredStock) listing.getListedStock("GIN");
         BigDecimal expectedValue = ginStock.getFixedDividend().multiply(ginStock.getParValue(), MathContext.DECIMAL64).divide(BigDecimal.TEN, MathContext.DECIMAL64);
         assertEquals(expectedValue, calculatedValue);
 
@@ -68,10 +68,12 @@ public class ITSuperSimpleStockMarket {
     @Test
     public void testRecordTrade() {
 
-        Trade dummyTrade = new Trade("TEA", LocalDateTime.now(), 100, BuySellIndicator.BUY, BigDecimal.TEN);
+        LocalDateTime now = LocalDateTime.now();
+        Trade dummyTrade = new Trade("TEA", now, 100L, BuySellIndicator.BUY, BigDecimal.TEN);
+
         simpleStockMarket.recordTrade(dummyTrade);
 
-        Collection<Trade> retrievedTrades = tradeDataService.getTradesForStockInInterval("TEA", LocalDateTime.now(), LocalDateTime.now().minusMinutes(10));
+        Collection<Trade> retrievedTrades = tradeDataService.getTradesForStockInInterval("TEA", now, now.minusMinutes(10));
         assertEquals(1, retrievedTrades.size());
         assertTrue(retrievedTrades.contains(dummyTrade));
     }
@@ -81,8 +83,7 @@ public class ITSuperSimpleStockMarket {
 
         generateAndRegisterTradesForStock("TEA");
 
-        Stock teaStock = stockListings.get("TEA");
-        BigDecimal calculatedValue = simpleStockMarket.calculateVolumeWeightedStockPrice(teaStock);
+        BigDecimal calculatedValue = simpleStockMarket.calculateVolumeWeightedStockPrice("TEA");
 
         BigDecimal four = new BigDecimal(4);
         BigDecimal hundred = new BigDecimal(100);
@@ -109,19 +110,20 @@ public class ITSuperSimpleStockMarket {
         assertEquals(expectedValue, calculatedValue);
     }
 
-    @Test
+    @Test(expected=ArithmeticException.class)
     public void testCalculatePERatioForStock() {
 
-        Stock teaStock = stockListings.get("TEA");
-        BigDecimal calculatedValue = simpleStockMarket.calculatePERatioForStock(teaStock, BigDecimal.TEN);
-        BigDecimal expectedValue = BigDecimal.ZERO;
+        simpleStockMarket.calculatePERatioForStock("TEA", BigDecimal.TEN);
 
-        assertEquals(expectedValue, calculatedValue);
+    }
 
-        Stock popStock = stockListings.get("POP");
-        popStock.setStockPrice(BigDecimal.TEN);
-        calculatedValue = simpleStockMarket.calculatePERatioForStock(popStock, BigDecimal.TEN);
-        expectedValue = BigDecimal.TEN.divide(popStock.getLastDividend(), MathContext.DECIMAL64);
+    @Test
+    public void testCalculatePERatioForStockWithNonZero() {
+
+        BigDecimal calculatedValue = simpleStockMarket.calculatePERatioForStock("POP", BigDecimal.TEN);
+
+        Stock popStock = listing.getListedStock("POP");
+        BigDecimal expectedValue = BigDecimal.TEN.divide(popStock.getLastDividend(), MathContext.DECIMAL64);
 
         assertEquals(expectedValue, calculatedValue);
     }
@@ -131,26 +133,25 @@ public class ITSuperSimpleStockMarket {
     /**
      * Initialisation method for the Stock Markets stock listings.
      *
-     * @author Ryan Wishart
-     *
      * @return Map  - data structure representing the listed stocks listed in the stock market.
      */
-    private Map<String, Stock> initStockListings() {
+    private StockListing initlisting() {
 
-        Stock teaStock = new Stock("TEA", StockType.COMMON, BigDecimal.ZERO, null, BigDecimal.ONE, BigDecimal.ZERO);
-        Stock popStock = new Stock("POP", StockType.COMMON, new BigDecimal(0.08, MathContext.DECIMAL64), null, BigDecimal.ONE, BigDecimal.ZERO);
-        Stock aleStock = new Stock("ALE", StockType.COMMON, new BigDecimal(0.23, MathContext.DECIMAL64), null, new BigDecimal(0.6, MathContext.DECIMAL64), BigDecimal.ZERO);
-        Stock ginStock = new Stock("GIN", StockType.PREFERRED, new BigDecimal(0.08, MathContext.DECIMAL64), new BigDecimal(0.02, MathContext.DECIMAL64), BigDecimal.ONE, BigDecimal.ZERO);
-        Stock joeStock = new Stock("JOE", StockType.COMMON, new BigDecimal(0.13, MathContext.DECIMAL64), null, new BigDecimal(2.5, MathContext.DECIMAL64), BigDecimal.ZERO);
+        Stock teaStock = new CommonStock("TEA", BigDecimal.ZERO, BigDecimal.ONE);
+        Stock popStock = new CommonStock("POP", new BigDecimal(0.08, MathContext.DECIMAL64), BigDecimal.ONE);
+        Stock aleStock = new CommonStock("ALE", new BigDecimal(0.23, MathContext.DECIMAL64), new BigDecimal(0.6, MathContext.DECIMAL64));
+        Stock ginStock = new PreferredStock("GIN", new BigDecimal(0.08, MathContext.DECIMAL64), new BigDecimal(0.02, MathContext.DECIMAL64), BigDecimal.ONE);
+        Stock joeStock = new CommonStock("JOE", new BigDecimal(0.13, MathContext.DECIMAL64), new BigDecimal(2.5, MathContext.DECIMAL64));
 
-        Map<String, Stock> stockListings = new HashMap<>();
-        stockListings.put("TEA", teaStock);
-        stockListings.put("POP", popStock);
-        stockListings.put("ALE", aleStock);
-        stockListings.put("GIN", ginStock);
-        stockListings.put("JOE", joeStock);
+        
+        StockListing stockListing = new SimpleStockListing();
+        stockListing.listStock(teaStock);
+        stockListing.listStock(popStock);
+        stockListing.listStock(aleStock);
+        stockListing.listStock(ginStock);
+        stockListing.listStock(joeStock);
 
-        return stockListings;
+        return stockListing;
     }
 
     private void generateAndRegisterTradesForStock(String stockSymbol) {

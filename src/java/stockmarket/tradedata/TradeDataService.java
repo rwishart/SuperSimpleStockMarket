@@ -1,6 +1,5 @@
-package stockmarket.trade.service;
+package stockmarket.tradedata;
 
-import stockmarket.trade.BuySellIndicator;
 import stockmarket.trade.Trade;
 
 import java.time.LocalDateTime;
@@ -13,7 +12,7 @@ import java.util.Collection;
  */
 public interface TradeDataService {
 
-    void recordTrade(Trade trade);
+    void recordTrade(final Trade trade);
 
-    Collection<Trade> getTradesForStockInInterval(String stockSymbol, LocalDateTime intervalStart, LocalDateTime intervalEnd);
+    Collection<Trade> getTradesForStockInInterval(final String stockSymbol, final LocalDateTime intervalStart, final LocalDateTime intervalEnd);
 }

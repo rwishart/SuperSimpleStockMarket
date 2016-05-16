@@ -1,4 +1,4 @@
-package stockmarket.trade.service;
+package stockmarket.tradedata;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +13,7 @@ import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Unit test class fro the {@link TradeDataServiceImpl} class.
+ * Unit Test class for the {@link TradeDataServiceImpl} class.
  *
  * @author Ryan Wishart
  */
