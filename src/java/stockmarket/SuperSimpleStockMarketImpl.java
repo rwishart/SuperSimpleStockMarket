@@ -10,10 +10,11 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Implementation of a {@link SuperSimpleStockMarket}.
+ * Concrete implementation of a {@link SuperSimpleStockMarket}.
  *
  * @author Ryan Wishart
  */
@@ -28,6 +29,13 @@ class SuperSimpleStockMarketImpl implements SuperSimpleStockMarket {
     private static final int WEIGHTED_VOLUME_STOCK_PRICE_CALC_WINDOW = 15;
 
 
+    /**
+     * Constructor for the SuperSimpleStockMarketImpl
+     *
+     * @param tradeDataService               - an instance of TradeDataService
+     * @param stockMarketCalculationService  - an instance of the StockMarketCalculationService
+     * @param stockListing                   - an instance of a StockListing
+     */
     SuperSimpleStockMarketImpl(final TradeDataService tradeDataService,
                                final StockMarketCalculationService stockMarketCalculationService,
                                final StockListing stockListing) {
@@ -73,7 +81,7 @@ class SuperSimpleStockMarketImpl implements SuperSimpleStockMarket {
         LocalDateTime intervalEnd = LocalDateTime.now();
         LocalDateTime intervalStart = intervalEnd.minusMinutes(WEIGHTED_VOLUME_STOCK_PRICE_CALC_WINDOW);
 
-        Collection<Trade> tradesInInterval = tradeDataService.getTradesForStockInInterval(stockSymbol,
+        Set<Trade> tradesInInterval = tradeDataService.getTradesForStockInInterval(stockSymbol,
                 intervalStart, intervalEnd);
         return stockMarketCalculationService.calculateVolumeWeightedStockPrice(tradesInInterval);
     }
@@ -88,13 +96,20 @@ class SuperSimpleStockMarketImpl implements SuperSimpleStockMarket {
 
         List<BigDecimal> stockPrices = allStocks.stream().map(stock -> {
 
-            Collection<Trade> tradesForStock = tradeDataService.getTradesForStockInInterval(stock.getStockSymbol(), intervalStart, intervalEnd);
+            Set<Trade> tradesForStock = tradeDataService.getTradesForStockInInterval(stock.getStockSymbol(), intervalStart, intervalEnd);
             return stockMarketCalculationService.calculateVolumeWeightedStockPrice(tradesForStock);
         }).collect(Collectors.toList());
 
         return stockMarketCalculationService.calculateGBCEAllShareIndexFromPrices(stockPrices);
     }
 
+    /**
+     * Method to validate that the parameter stockSymbol is present in the stockListing.
+     * <p/>
+     *
+     * @throws IllegalArgumentException - if the parameter stock symbol is not listed in the stockListing.
+     * @param stockSymbol               - the stock symbol to validate in stockListing.
+     */
     private void validateStockSymbol(String stockSymbol) {
 
         if (!stockListing.isListedStock(stockSymbol))

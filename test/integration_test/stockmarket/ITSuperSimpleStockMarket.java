@@ -21,8 +21,8 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Integration Test for the {@link SuperSimpleStockMarketImpl} class linking together the
@@ -38,6 +38,9 @@ public class ITSuperSimpleStockMarket {
 
     private TradeDataService tradeDataService;
 
+    /**
+     * Setup for each test.
+     */
     @Before
     public void setUp() {
 
@@ -47,6 +50,9 @@ public class ITSuperSimpleStockMarket {
         simpleStockMarket = new SuperSimpleStockMarketImpl(tradeDataService, stockMarketCalculationService, listing);
     }
 
+    /**
+     * Validate the calculation of Dividend Yield for both common and preferred stocks.
+     */
     @Test
     public void testCalculateDividendYieldForStock() {
 
@@ -65,6 +71,9 @@ public class ITSuperSimpleStockMarket {
 
     }
 
+    /**
+     * Validate that the SuperSimpleStockMarket can record (and retrieve) {@link Trade}s.
+     */
     @Test
     public void testRecordTrade() {
 
@@ -78,6 +87,9 @@ public class ITSuperSimpleStockMarket {
         assertTrue(retrievedTrades.contains(dummyTrade));
     }
 
+    /**
+     * Validate the calculation of volume weighted stock price.
+     */
     @Test
     public void testVolumeWeightedStockPrice() {
 
@@ -93,6 +105,9 @@ public class ITSuperSimpleStockMarket {
         assertEquals(0, expectedValue.compareTo(calculatedValue));
     }
 
+    /**
+     * Validate the calculation of the GBCE All Share index given test data provided in the specs.
+     */
     @Test
     public void testCalculationOfGBCEAllShareIndex() {
 
@@ -110,6 +125,9 @@ public class ITSuperSimpleStockMarket {
         assertEquals(expectedValue, calculatedValue);
     }
 
+    /**
+     * Validate that an ArithmeticException is thrown when calculating the PE ratio for a stock with lastDividend = 0
+     */
     @Test(expected=ArithmeticException.class)
     public void testCalculatePERatioForStock() {
 
@@ -117,6 +135,9 @@ public class ITSuperSimpleStockMarket {
 
     }
 
+    /**
+     * Validate that PE ratio is calculated correctly when lastDividend is > 0.
+     */
     @Test
     public void testCalculatePERatioForStockWithNonZero() {
 

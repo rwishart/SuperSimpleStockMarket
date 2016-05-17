@@ -3,12 +3,21 @@ package stockmarket.tradedata;
 import stockmarket.trade.Trade;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.stream.Collectors;
 
 /**
- * Implementation of the TradeDataService used within the SuperSimpleStockMarket application.
+ * Concrete implementation of the {@link TradeDataService} interface used within the SuperSimpleStockMarket application.
+ * <p/>
+ * The implementation uses a ConcurrentSkipListMap object to store all {@link Trade} objects. To speed searching, the Map
+ * uses the stockSymbol recorded in the {@link Trade} as a Key. The corresponding Value is a ConcurrentSkipListSet containing
+ * all {@link Trade} objects with that stockSymbol.
+ * <p/>
+ * As the Trades are stored in a Set, duplicate Trades are not allowed. The Trades in the Set are sorted by timestamp. This
+ * speeds retrieval over an interval.
  *
  * @author Ryan Wishart
  */
@@ -18,7 +27,7 @@ public class TradeDataServiceImpl implements TradeDataService {
 
     public TradeDataServiceImpl() {
 
-        tradeStore = new HashMap<>();
+        tradeStore = new ConcurrentSkipListMap<>();
     }
 
     @Override
@@ -46,16 +55,23 @@ public class TradeDataServiceImpl implements TradeDataService {
     }
 
     @Override
-    public Collection<Trade> getTradesForStockInInterval(final String stockSymbol,
+    public Set<Trade> getTradesForStockInInterval(final String stockSymbol,
                                                          final LocalDateTime intervalStart,
                                                          final LocalDateTime intervalEnd) {
 
-        Collection<Trade> tradesInInterval = Collections.EMPTY_LIST;
+        Set<Trade> tradesInInterval = new LinkedHashSet<>();
 
         if(tradeStore.containsKey(stockSymbol)) {
             Set<Trade> tradesForStock = tradeStore.get(stockSymbol);
-            tradesInInterval = tradesForStock.stream().filter(trade -> timestampInInterval(trade.getTimestamp(),
-                    intervalStart, intervalEnd)).collect(Collectors.toList());
+
+            for(Trade trade : tradesForStock) {
+                if(timestampInInterval(trade.getTimestamp(), intervalStart, intervalEnd)) {
+                    tradesInInterval.add(trade);
+
+                } else if (trade.getTimestamp().isAfter(intervalEnd)){ //we have passed the end of our interval. End the search.
+                    break;
+                }
+            }
         }
 
         return tradesInInterval;
@@ -67,28 +83,5 @@ public class TradeDataServiceImpl implements TradeDataService {
 
         return timestamp.equals(intervalStart) || (timestamp.isAfter(intervalStart) &&
                 timestamp.isBefore(intervalEnd)) || timestamp.equals(intervalEnd);
-    }
-
-    private class TradeComparator implements Comparator<Trade> {
-
-        @Override
-        public int compare(Trade left, Trade right) {
-
-            if(left == null && right != null)
-                return -1;
-
-            if(right == null && left != null)
-                return 1;
-
-            if(right == left && right == null)
-                return 0;
-
-            if(left.equals(right)) {
-                return 0;
-
-            } else {
-                return left.getTimestamp().compareTo(right.getTimestamp());
-            }
-        }
     }
 }

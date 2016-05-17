@@ -5,6 +5,7 @@ import stockmarket.trade.Trade;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * Implementation of a {@link StockMarketCalculationService}.
@@ -14,7 +15,7 @@ import java.util.Collection;
 public class StockMarketCalculationServiceImpl implements StockMarketCalculationService {
 
     @Override
-    public BigDecimal calculateVolumeWeightedStockPrice(final Collection<Trade> tradesToCalculateFor) {
+    public BigDecimal calculateVolumeWeightedStockPrice(final Set<Trade> tradesToCalculateFor) {
 
         if (tradesToCalculateFor.size() == 0) {
             return BigDecimal.ZERO;

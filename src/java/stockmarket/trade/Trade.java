@@ -4,7 +4,18 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Trade class to capture information about a trade executed on the SuperSimpleStockMarket.
+ * Concrete representation of a trade conducted on the SuperSimpleStockExchange.
+ * <p/>
+ * Trades record:
+ * <ul>
+ *     <li>the stock involved</li>
+ *     <li>the timestamp for the transaction</li>
+ *     <li>the quantity of shares</li>
+ *     <li>whether it was a buy or a sell trade</li>
+ *     <li>the price of the stock</li>
+ * </ul>
+ * <p/>
+ * All trades are assumed to be conducted in Pounds Sterling.
  *
  * @author Ryan Wishart
  */
@@ -76,5 +87,17 @@ public class Trade {
         result = 31 * result + buySellIndicator.hashCode();
         result = 31 * result + tradedPrice.hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Trade{");
+        sb.append("stockSymbol='").append(stockSymbol).append('\'');
+        sb.append(", timestamp=").append(timestamp);
+        sb.append(", quantityOfShares=").append(quantityOfShares);
+        sb.append(", buySellIndicator=").append(buySellIndicator);
+        sb.append(", tradedPrice=").append(tradedPrice);
+        sb.append('}');
+        return sb.toString();
     }
 }

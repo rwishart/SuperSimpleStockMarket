@@ -7,7 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Unit Test class for the {@link SimpleStockListing} class.
+ * Basic implementation of the {@link StockListing} interface that makes use of a HashMap to
+ * store and retrieve {@link Stock}.
  *
  * @author Ryan Wishart
  */

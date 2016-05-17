@@ -4,7 +4,8 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 
 /**
- * Abstract implementation of the {@link Stock} interface.
+ * Abstract implementation of the {@link Stock} interface. This class provides basic functionality required by a
+ * {@link Stock}.
  *
  * @author Ryan Wishart
  */
@@ -51,9 +52,16 @@ abstract class AbstractStock implements Stock {
         return stockSymbol;
     }
 
-    void validatePrice(BigDecimal price) {
+    /**
+     * This method validates that a parameter BigDecimal value is (1) not null and (2) not negative or zero.
+     * <p/>
+     * If these conditions are not met, an {@link IllegalArgumentException} is thrown.
+     *
+     * @param price - the price to validate.
+     */
+    protected void validatePrice(BigDecimal price) {
 
-        if (price.compareTo(BigDecimal.ZERO) <= 0) {
+        if (price == null || price.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Illegal argument provided to calculatePERatio method call. Price must be greater than zero.");
         }
     }

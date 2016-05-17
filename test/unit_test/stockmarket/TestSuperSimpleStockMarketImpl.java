@@ -3,6 +3,7 @@ package stockmarket;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.internal.util.collections.Sets;
 import stockmarket.calulator.StockMarketCalculationService;
 import stockmarket.stock.CommonStock;
 import stockmarket.stock.Stock;
@@ -16,6 +17,7 @@ import java.math.MathContext;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -24,7 +26,7 @@ import static org.mockito.Mockito.*;
 
 /**
  * Unit Test for the {@link SuperSimpleStockMarketImpl}. The class makes use of {@link Mockito} and
- * dummy data to exercise the SuperSimpleStockMarket functionality.
+ * dummy data to exercise the {@link SuperSimpleStockMarket} functionality.
  *
  * @author Ryan Wishart
  */
@@ -50,6 +52,9 @@ public class TestSuperSimpleStockMarketImpl {
         simpleStockMarket = new SuperSimpleStockMarketImpl(tradeDataService, stockMarketCalculationService, stockListing);
     }
 
+    /**
+     * Validate Dividend Yield is calculated correctly for a CommonStock.
+     */
     @Test
     public void testDividendYieldForStock() {
 
@@ -65,6 +70,9 @@ public class TestSuperSimpleStockMarketImpl {
         assertEquals(lastDividend.divide(price, MathContext.DECIMAL64), calculatedValue);
     }
 
+    /**
+     * Validate calculation of the GBCE All Share Index with dummy data.
+     */
     @Test
     public void testCalculateGBCEAllShareIndex() {
 
@@ -72,7 +80,7 @@ public class TestSuperSimpleStockMarketImpl {
         Collection<Stock> stocks = Arrays.asList(dummyStock);
 
         Trade trade = new Trade(TEA_STOCK_SYMBOL, LocalDateTime.now(), 100L, BuySellIndicator.BUY, BigDecimal.TEN);
-        Collection<Trade> tradesInInterval = Arrays.asList(trade);
+        Set<Trade> tradesInInterval = Sets.newSet(trade);
 
         Collection<BigDecimal> prices = Arrays.asList(BigDecimal.ONE);
 
@@ -87,6 +95,9 @@ public class TestSuperSimpleStockMarketImpl {
         assertEquals(BigDecimal.ONE, calculatedValue);
     }
 
+    /**
+     * Validate that the PE ratio is calculated correctly for a stock.
+     */
     @Test
     public void testCalculatePERatioForStock() {
 
@@ -99,12 +110,15 @@ public class TestSuperSimpleStockMarketImpl {
         assertEquals(BigDecimal.TEN, calculatedValue);
     }
 
+    /**
+     * Validate that the volume weighted stock price is calculated correctly.
+     */
     @Test
     public void testCalculateVolumeWeightedStockPrice() {
 
         when(stockListing.isListedStock(TEA_STOCK_SYMBOL)).thenReturn(true);
         Trade trade = new Trade(TEA_STOCK_SYMBOL, LocalDateTime.now(), 1, BuySellIndicator.BUY, BigDecimal.ONE);
-        Collection<Trade> tradesInInterval = Arrays.asList(trade, trade, trade);
+        Set<Trade> tradesInInterval = Sets.newSet(trade, trade, trade);
 
         when(tradeDataService.getTradesForStockInInterval(eq(TEA_STOCK_SYMBOL), any(LocalDateTime.class), any(LocalDateTime.class))).thenReturn(tradesInInterval);
         when(stockMarketCalculationService.calculateVolumeWeightedStockPrice(eq(tradesInInterval))).thenReturn(BigDecimal.TEN);
@@ -114,6 +128,9 @@ public class TestSuperSimpleStockMarketImpl {
         assertEquals(BigDecimal.TEN, calculatedValue);
     }
 
+    /**
+     * Validate that trades can be recorded.
+     */
     @Test
     public void testRecordTrade() {
 

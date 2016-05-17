@@ -2,7 +2,7 @@ package stockmarket.trade;
 
 /**
  * Enumeration capturing the allowed states for the Buy/Sell indicator
- * on a CommonStock.
+ * of a {@link Trade}.
  *
  * @author Ryan Wishart
  */
