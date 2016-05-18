@@ -42,6 +42,9 @@ public class TestSuperSimpleStockMarketImpl {
 
     private StockListing stockListing;
 
+    /**
+     * Setup objects for testing.
+     */
     @Before
     public void setUp() {
 
@@ -60,7 +63,7 @@ public class TestSuperSimpleStockMarketImpl {
 
         BigDecimal lastDividend = new BigDecimal(0.50, MathContext.DECIMAL64);
         BigDecimal price = new BigDecimal(123.45, MathContext.DECIMAL64);
-        Stock dummyStock = new CommonStock(TEA_STOCK_SYMBOL, lastDividend, BigDecimal.TEN);
+        Stock dummyStock = new CommonStock(TEA_STOCK_SYMBOL, lastDividend, BigDecimal.TEN, BigDecimal.ONE);
 
         when(stockListing.isListedStock(TEA_STOCK_SYMBOL)).thenReturn(true);
         when(stockListing.getListedStock(TEA_STOCK_SYMBOL)).thenReturn(dummyStock);
@@ -76,18 +79,12 @@ public class TestSuperSimpleStockMarketImpl {
     @Test
     public void testCalculateGBCEAllShareIndex() {
 
-        Stock dummyStock = new CommonStock(TEA_STOCK_SYMBOL, BigDecimal.ZERO, BigDecimal.TEN);
+        Stock dummyStock = new CommonStock(TEA_STOCK_SYMBOL, BigDecimal.ZERO, BigDecimal.TEN, BigDecimal.ONE);
         Collection<Stock> stocks = Arrays.asList(dummyStock);
-
-        Trade trade = new Trade(TEA_STOCK_SYMBOL, LocalDateTime.now(), 100L, BuySellIndicator.BUY, BigDecimal.TEN);
-        Set<Trade> tradesInInterval = Sets.newSet(trade);
 
         Collection<BigDecimal> prices = Arrays.asList(BigDecimal.ONE);
 
-        when(tradeDataService.getTradesForStockInInterval(eq(TEA_STOCK_SYMBOL), any(LocalDateTime.class),
-                any(LocalDateTime.class))).thenReturn(tradesInInterval);
         when(stockListing.getAllListedStock()).thenReturn(stocks);
-        when(stockMarketCalculationService.calculateVolumeWeightedStockPrice(eq(tradesInInterval))).thenReturn(BigDecimal.ONE);
         when(stockMarketCalculationService.calculateGBCEAllShareIndexFromPrices(eq(prices))).thenReturn(BigDecimal.ONE);
 
         BigDecimal calculatedValue = simpleStockMarket.calculateGBCEAllShareIndex();
@@ -101,7 +98,7 @@ public class TestSuperSimpleStockMarketImpl {
     @Test
     public void testCalculatePERatioForStock() {
 
-        Stock dummyStock = new CommonStock(TEA_STOCK_SYMBOL, BigDecimal.ONE, BigDecimal.TEN);
+        Stock dummyStock = new CommonStock(TEA_STOCK_SYMBOL, BigDecimal.ONE, BigDecimal.TEN, BigDecimal.ONE);
 
         when(stockListing.isListedStock(eq(TEA_STOCK_SYMBOL))).thenReturn(true);
         when(stockListing.getListedStock(eq(TEA_STOCK_SYMBOL))).thenReturn(dummyStock);
@@ -139,7 +136,7 @@ public class TestSuperSimpleStockMarketImpl {
         Trade trade = new Trade(TEA_STOCK_SYMBOL, LocalDateTime.now(), 100L, BuySellIndicator.SELL, BigDecimal.TEN);
         simpleStockMarket.recordTrade(trade);
 
-        //Verify that the recordTrade method is called on the tradeDataService
+        //Verify that the recordTrade method is called on the tradeDataService exactly once.
         verify(tradeDataService, times(1)).recordTrade(eq(trade));
     }
 }

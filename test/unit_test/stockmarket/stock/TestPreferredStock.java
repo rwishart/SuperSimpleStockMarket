@@ -15,6 +15,9 @@ import static org.junit.Assert.assertEquals;
 public class TestPreferredStock {
 
 
+    /**
+     * Validate the getters on the PreferredStock object.
+     */
     @Test
     public void testGetters() {
 
@@ -24,8 +27,12 @@ public class TestPreferredStock {
         assertEquals(new BigDecimal(0.08, MathContext.DECIMAL64), stock.getLastDividend());
         assertEquals(new BigDecimal(0.02, MathContext.DECIMAL64), stock.getFixedDividend());
         assertEquals(new BigDecimal(1, MathContext.DECIMAL64), stock.getParValue());
+        assertEquals(BigDecimal.ONE, stock.getStockPrice());
     }
 
+    /**
+     * Validate the {@PreferredStock#calculateDividendYield} method returns correct answer when the parameter price is valid.
+     */
     @Test
     public void testCalculatedDividendYield() {
 
@@ -36,6 +43,10 @@ public class TestPreferredStock {
         assertEquals(expectedValue, stock.calculateDividendYield(price));
     }
 
+    /**
+     * Verify that an IllegalArgumentException is thrown when a price of zero is given to the {@PreferredStock#calculateDividendYield}
+     * method.
+     */
     @Test(expected=IllegalArgumentException.class)
     public void testCalculatedDividendYieldZeroValue() {
 
@@ -44,6 +55,9 @@ public class TestPreferredStock {
         stock.calculateDividendYield(BigDecimal.ZERO);
     }
 
+    /**
+     * Verift that an IllegalArgumentException is thrown when {@PreferredStock#calculateDividendYield} is called with a negative price.
+     */
     @Test(expected=IllegalArgumentException.class)
     public void testCalculatedDividendYieldNegativeValue() {
 
@@ -52,6 +66,20 @@ public class TestPreferredStock {
         stock.calculateDividendYield(BigDecimal.ONE.negate());
     }
 
+    /**
+     * Verift that an IllegalArgumentException is thrown when {@PreferredStock#calculateDividendYield} is called with a null price.
+     */
+    @Test(expected=IllegalArgumentException.class)
+    public void testCalculatedDividendYieldNullPrice() {
+
+        PreferredStock stock = generateStock();
+
+        stock.calculateDividendYield(null);
+    }
+
+    /**
+     * Check that the {@PreferredStock#calculatePERatio} calculates the correct PE value when given a valid price.
+     */
     @Test
     public void testCalculatedPERatio() {
 
@@ -63,6 +91,9 @@ public class TestPreferredStock {
         assertEquals(expectedValue, stock.calculatePERatio(price));
     }
 
+    /**
+     * Verify that the {@PreferredStock#calculatePERatio} throws an IllegalArgumentException when given a price of zero.
+     */
     @Test(expected=IllegalArgumentException.class)
     public void testCalculatedPERatioZeroPrice() {
 
@@ -70,6 +101,9 @@ public class TestPreferredStock {
         stock.calculatePERatio(BigDecimal.ZERO);
     }
 
+    /**
+     * Check that the {@PreferredStock#calculatePERatio} throws an IllegalArgumentException when given a negative price.
+     */
     @Test(expected=IllegalArgumentException.class)
     public void testCalculatedPERatioNegativePrice() {
 
@@ -77,10 +111,20 @@ public class TestPreferredStock {
         stock.calculatePERatio(BigDecimal.ONE.negate());
     }
 
+    /**
+     * Check that the {@PreferredStock#calculatePERatio} throws an IllegalArgumentException when given a null price.
+     */
+    @Test(expected=IllegalArgumentException.class)
+    public void testCalculatedPERatioNullPrice() {
+
+        PreferredStock stock = generateStock();
+        stock.calculatePERatio(null);
+    }
+
     //// Helper methods
     private PreferredStock generateStock() {
 
         return new PreferredStock("GIN", new BigDecimal(0.08, MathContext.DECIMAL64),
-                new BigDecimal(1, MathContext.DECIMAL64), new BigDecimal(0.02, MathContext.DECIMAL64));
+                new BigDecimal(1, MathContext.DECIMAL64), new BigDecimal(0.02, MathContext.DECIMAL64), BigDecimal.ONE);
     }
 }

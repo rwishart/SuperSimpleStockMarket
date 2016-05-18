@@ -1,9 +1,11 @@
 The following assumptions have been made in the implementation of this SuperSimpleStockMarket.
 
+ASSUMPTIONS:
 1. All stock transactions are conducted in Pounds Sterling. Prices quoted in pennies on the example information have been
    converted to Pounds.
 2. Price values are represented using BigDecimal objects. Precision and rounding for the BigDecimal values is taken as 16 digits
    with HALF_EVEN rounding as per IEEE 754R.
 3. Runtime exceptions are thrown when data validation fails. These exceptions are not caught. In a more complete implementation
    an exception barrier would be responsible for handling these exceptions and triggering transaction rollback where necessary.
-4.
+4. Input validation is done on recording trades, retrieving stocks and on quoted prices.
+

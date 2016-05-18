@@ -90,15 +90,7 @@ class SuperSimpleStockMarketImpl implements SuperSimpleStockMarket {
     public BigDecimal calculateGBCEAllShareIndex() {
 
         Collection<Stock> allStocks = stockListing.getAllListedStock();
-
-        LocalDateTime intervalStart = LocalDateTime.now();
-        LocalDateTime intervalEnd = intervalStart.minusMinutes(WEIGHTED_VOLUME_STOCK_PRICE_CALC_WINDOW);
-
-        List<BigDecimal> stockPrices = allStocks.stream().map(stock -> {
-
-            Set<Trade> tradesForStock = tradeDataService.getTradesForStockInInterval(stock.getStockSymbol(), intervalStart, intervalEnd);
-            return stockMarketCalculationService.calculateVolumeWeightedStockPrice(tradesForStock);
-        }).collect(Collectors.toList());
+        List<BigDecimal> stockPrices = allStocks.stream().map(stock -> stock.getStockPrice()).collect(Collectors.toList());
 
         return stockMarketCalculationService.calculateGBCEAllShareIndexFromPrices(stockPrices);
     }

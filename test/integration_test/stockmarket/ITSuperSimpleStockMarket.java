@@ -158,11 +158,11 @@ public class ITSuperSimpleStockMarket {
      */
     private StockListing initlisting() {
 
-        Stock teaStock = new CommonStock("TEA", BigDecimal.ZERO, BigDecimal.ONE);
-        Stock popStock = new CommonStock("POP", new BigDecimal(0.08, MathContext.DECIMAL64), BigDecimal.ONE);
-        Stock aleStock = new CommonStock("ALE", new BigDecimal(0.23, MathContext.DECIMAL64), new BigDecimal(0.6, MathContext.DECIMAL64));
-        Stock ginStock = new PreferredStock("GIN", new BigDecimal(0.08, MathContext.DECIMAL64), new BigDecimal(0.02, MathContext.DECIMAL64), BigDecimal.ONE);
-        Stock joeStock = new CommonStock("JOE", new BigDecimal(0.13, MathContext.DECIMAL64), new BigDecimal(2.5, MathContext.DECIMAL64));
+        Stock teaStock = new CommonStock("TEA", BigDecimal.ZERO, BigDecimal.ONE, BigDecimal.ONE);
+        Stock popStock = new CommonStock("POP", new BigDecimal(0.08, MathContext.DECIMAL64), BigDecimal.ONE, BigDecimal.ONE);
+        Stock aleStock = new CommonStock("ALE", new BigDecimal(0.23, MathContext.DECIMAL64), new BigDecimal(0.6, MathContext.DECIMAL64), BigDecimal.ONE);
+        Stock ginStock = new PreferredStock("GIN", new BigDecimal(0.08, MathContext.DECIMAL64), new BigDecimal(0.02, MathContext.DECIMAL64), BigDecimal.ONE, BigDecimal.ONE);
+        Stock joeStock = new CommonStock("JOE", new BigDecimal(0.13, MathContext.DECIMAL64), new BigDecimal(2.5, MathContext.DECIMAL64), BigDecimal.ONE);
 
         
         StockListing stockListing = new SimpleStockListing();

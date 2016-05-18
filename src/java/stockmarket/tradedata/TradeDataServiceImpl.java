@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Concrete implementation of the {@link TradeDataService} interface used within the SuperSimpleStockMarket application.
@@ -23,6 +25,8 @@ import java.util.concurrent.ConcurrentSkipListSet;
  */
 public class TradeDataServiceImpl implements TradeDataService {
 
+    private static final Logger log = Logger.getLogger("TradeDataServiceImpl");
+
     private Map<String, Set<Trade>> tradeStore;
 
     public TradeDataServiceImpl() {
@@ -33,10 +37,16 @@ public class TradeDataServiceImpl implements TradeDataService {
     @Override
     public void recordTrade(Trade trade) {
 
+        if(trade == null) {
+            throw new IllegalArgumentException("Null parameter passed to the recordTrade method. This is an illegal argument.");
+        }
+
         String stockSymbol = trade.getStockSymbol();
 
         if(tradeStore.containsKey(stockSymbol)) {
 
+            log.log(Level.ALL, String.format("The trade store contains the stockSymbol %s. Adding trade to existing set of trades",
+                    trade.getStockSymbol()));
             Set trades = tradeStore.get(stockSymbol);
 
             if(trades != null) {
@@ -48,6 +58,7 @@ public class TradeDataServiceImpl implements TradeDataService {
 
         } else {
 
+            log.log(Level.ALL, "Adding trade to new Set and storing");
             ConcurrentSkipListSet<Trade> tradeList = new ConcurrentSkipListSet<>(new TradeComparator());
             tradeList.add(trade);
             tradeStore.put(stockSymbol, tradeList);
@@ -66,9 +77,11 @@ public class TradeDataServiceImpl implements TradeDataService {
 
             for(Trade trade : tradesForStock) {
                 if(timestampInInterval(trade.getTimestamp(), intervalStart, intervalEnd)) {
+                    log.log(Level.ALL, String.format("timestamp %s is in interval (%s, %s)", trade.getTimestamp(), intervalStart, intervalEnd));
                     tradesInInterval.add(trade);
 
                 } else if (trade.getTimestamp().isAfter(intervalEnd)){ //we have passed the end of our interval. End the search.
+                    log.log(Level.ALL, String.format("timestamp %s is after end of interval %s so exiting.", trade.getTimestamp(), intervalEnd));
                     break;
                 }
             }

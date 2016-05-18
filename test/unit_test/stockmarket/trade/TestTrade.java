@@ -15,8 +15,11 @@ import static junit.framework.TestCase.assertEquals;
  */
 public class TestTrade {
 
+    /**
+     * Validate the getters on a Trade object.
+     */
     @Test
-    public void testTradeGettersSetters() {
+    public void testTradeGetters() {
 
         String stockSymbol = "TEA";
         LocalDateTime now = LocalDateTime.now();

@@ -23,18 +23,27 @@ public class TestTradeDataServiceImpl {
     
     private static final String TEA_STOCK_SYMBOL = "TEA";
 
+    /**
+     * Set up objects for the test.
+     */
     @Before
     public void setUp() {
 
         tradeDataService = new TradeDataServiceImpl();
     }
 
-    @Test (expected = NullPointerException.class)
+    /**
+     * Verify that an IllegalArgumentException is thrown when a null value is passed to the {@link TradeDataService#recordTrade method.}
+     */
+    @Test (expected = IllegalArgumentException.class)
     public void testRetrieveTradeNullArgument() {
 
         tradeDataService.recordTrade(null);
     }
 
+    /**
+     * Check that a trade within the time interval is retrieved.
+     */
     @Test
     public void testRetrieveTradeInsideInterval() {
 
@@ -49,6 +58,9 @@ public class TestTradeDataServiceImpl {
 
     }
 
+    /**
+     * Test that no trades are retrieved outside of the time interval.
+     */
     @Test
     public void testRetrieveTradeOutsideInterval() {
 
@@ -61,6 +73,9 @@ public class TestTradeDataServiceImpl {
         assertEquals(0, retrievedTrades.size());
     }
 
+    /**
+     * Verify that only the trades on or within the boundary window are retrieved.
+     */
     @Test
     public void testRetrieveTradeOnIntervalBoundaries() {
 
@@ -78,6 +93,9 @@ public class TestTradeDataServiceImpl {
         assertTrue(retrievedTrades.contains(trade2));
     }
 
+    /**
+     * Verify that only stock with the correct stockSymbol are retrieved.
+     */
     @Test
     public void testRetrieveTradesFiltersByStockSymbol() {
 

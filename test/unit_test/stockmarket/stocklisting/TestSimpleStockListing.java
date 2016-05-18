@@ -6,6 +6,7 @@ import stockmarket.stock.CommonStock;
 import stockmarket.stock.Stock;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -20,12 +21,18 @@ public class TestSimpleStockListing {
 
     private StockListing stockListing;
 
+    /**
+     * create objects for the testing.
+     */
     @Before
     public void setUp(){
 
         stockListing = new SimpleStockListing();
     }
 
+    /**
+     * Verify that the SimpleStockListing can list and retrieve a Stock.
+     */
     @Test
     public void testListAndGetListedStock() {
 
@@ -33,21 +40,26 @@ public class TestSimpleStockListing {
         Stock retrievedStock = stockListing.getListedStock("TEA");
         assertNull(retrievedStock);
 
-        Stock teaStock = new CommonStock("TEA", BigDecimal.ZERO, BigDecimal.ONE);
+        Stock teaStock = new CommonStock("TEA", BigDecimal.ZERO, BigDecimal.ONE, BigDecimal.ONE);
         stockListing.listStock(teaStock);
         retrievedStock = stockListing.getListedStock("TEA");
 
         assertEquals(teaStock, retrievedStock);
     }
 
+    /**
+     * Test that all listed stocks are retrieved on a call to {@link SimpleStockListing#getAllListedStock}.
+     */
     @Test
     public void testGetAllListedStock() {
 
-        Stock testStock = new CommonStock("TEA", BigDecimal.ZERO, BigDecimal.ONE);
+        Stock stock1 = new CommonStock("TEA", BigDecimal.ZERO, BigDecimal.ONE, BigDecimal.ONE);
+        Stock stock2 = new CommonStock("POP", BigDecimal.ZERO, BigDecimal.ONE, BigDecimal.ONE);
 
-        stockListing.listStock(testStock);
+        stockListing.listStock(stock1);
+        stockListing.listStock(stock2);
 
-        assertEquals(1, stockListing.getAllListedStock().size());
-        assertTrue(stockListing.getAllListedStock().contains(testStock));
+        assertEquals(2, stockListing.getAllListedStock().size());
+        assertTrue(stockListing.getAllListedStock().containsAll(Arrays.asList(stock1,stock2)));
     }
 }

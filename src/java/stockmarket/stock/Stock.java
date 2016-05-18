@@ -34,4 +34,6 @@ public interface Stock {
 
     String getStockSymbol();
 
+    BigDecimal getStockPrice();
+
 }
