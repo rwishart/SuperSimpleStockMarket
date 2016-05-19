@@ -1,6 +1,26 @@
-The following assumptions have been made in the implementation of this SuperSimpleStockMarket.
+To the reader:
+--------------
 
-ASSUMPTIONS:
+This project is an implementation of the JP Morgan coding homework exercise "Super Simple Stock Market". The implementation
+project has been implemented so as to be "Spring ready". Spring can easily be used to wire together the components within the
+project.
+
+In implementing the assignment, Composition has been favoured over inheritance with the exception of Stock objects which
+have been modelled as PreferredStock and CommonStock extending an AbstractStock class. The AbstractStock class does
+however implement a Stock interface.
+
+Trade was not coded to an interface as it represents a simple POJO.
+
+Java BigDecimal has been used for all monetary amounts. The BigDecimal.DECIMAL64 MathContext (16 digit precision and HALF_EVEN rounding)
+is used throughout the project.
+
+Tests for all the concrete classes are provided in the test folder. I have broken them up in to integration_test and unit_test and
+followed the convention that Test* is a unit test while IT* is an integration test.
+
+For testing I have used Junit and Mockito.
+
+Assumptions for the exercise are listed below:
+----------------------------------------------
 1. All stock transactions are conducted in Pounds Sterling (GBP). Prices quoted in pennies on the example information have been
    converted to GBP.
 2. Price values are represented using BigDecimal objects. Precision and rounding for the BigDecimal values is taken as 16 digits
