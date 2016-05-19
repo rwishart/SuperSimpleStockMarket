@@ -47,7 +47,7 @@ public class TradeDataServiceImpl implements TradeDataService {
 
             log.log(Level.ALL, String.format("The trade store contains the stockSymbol %s. Adding trade to existing set of trades",
                     trade.getStockSymbol()));
-            Set trades = tradeStore.get(stockSymbol);
+            Set<Trade> trades = tradeStore.get(stockSymbol);
 
             if(trades != null) {
                 trades.add(trade);
@@ -77,11 +77,11 @@ public class TradeDataServiceImpl implements TradeDataService {
 
             for(Trade trade : tradesForStock) {
                 if(timestampInInterval(trade.getTimestamp(), intervalStart, intervalEnd)) {
-                    log.log(Level.ALL, String.format("timestamp %s is in interval (%s, %s)", trade.getTimestamp(), intervalStart, intervalEnd));
+                    log.log(Level.ALL, String.format("Timestamp %s is in interval (%s, %s)", trade.getTimestamp(), intervalStart, intervalEnd));
                     tradesInInterval.add(trade);
 
                 } else if (trade.getTimestamp().isAfter(intervalEnd)){ //we have passed the end of our interval. End the search.
-                    log.log(Level.ALL, String.format("timestamp %s is after end of interval %s so exiting.", trade.getTimestamp(), intervalEnd));
+                    log.log(Level.ALL, String.format("Timestamp %s is after end of interval %s so exiting.", trade.getTimestamp(), intervalEnd));
                     break;
                 }
             }
@@ -94,6 +94,7 @@ public class TradeDataServiceImpl implements TradeDataService {
                                         final LocalDateTime intervalStart,
                                         final LocalDateTime intervalEnd) {
 
+        log.log(Level.ALL, String.format("Checking timestamp %s is in interval (%s, %s).", timestamp, intervalStart, intervalEnd));
         return timestamp.equals(intervalStart) || (timestamp.isAfter(intervalStart) &&
                 timestamp.isBefore(intervalEnd)) || timestamp.equals(intervalEnd);
     }

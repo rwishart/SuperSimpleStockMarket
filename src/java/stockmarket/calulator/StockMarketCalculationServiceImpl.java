@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.Collection;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Implementation of a {@link StockMarketCalculationService}.
@@ -14,10 +16,13 @@ import java.util.Set;
  */
 public class StockMarketCalculationServiceImpl implements StockMarketCalculationService {
 
+    private static final Logger log = Logger.getLogger("StockMarketCalculationServiceImpl");
+
     @Override
     public BigDecimal calculateVolumeWeightedStockPrice(final Set<Trade> tradesToCalculateFor) {
 
-        if (tradesToCalculateFor.size() == 0) {
+        if (tradesToCalculateFor == null || tradesToCalculateFor.size() == 0) {
+            log.log(Level.ALL, "No trades provided to Volume Weighted Stock Price calculation - defaulting to zero.");
             return BigDecimal.ZERO;
         }
 
@@ -25,7 +30,7 @@ public class StockMarketCalculationServiceImpl implements StockMarketCalculation
         BigDecimal totalTradedPriceQuantity = new BigDecimal(0, MathContext.DECIMAL64);
 
         for (Trade trade : tradesToCalculateFor) {
-
+            log.log(Level.ALL, "Calculating volume weighted stock price using trade %s", trade);
             totalTradedPriceQuantity = totalTradedPriceQuantity.add(trade.getTradedPrice().multiply(
                     new BigDecimal(trade.getQuantityOfShares(), MathContext.DECIMAL64),
                     MathContext.DECIMAL64), MathContext.DECIMAL64);
@@ -38,14 +43,13 @@ public class StockMarketCalculationServiceImpl implements StockMarketCalculation
     @Override
     public BigDecimal calculateGBCEAllShareIndexFromPrices(final Collection<BigDecimal> stockPrices) {
 
-        int size = stockPrices.size();
-
-        if (size == 0) {
+        if(stockPrices == null || stockPrices.size() == 0) {
+            log.log(Level.ALL, "There are no prices provided to GBCE All Share Index calculation - defaulting to zero");
             return BigDecimal.ZERO;
         }
 
         BigDecimal multipliedTotal = stockPrices.stream().reduce(new BigDecimal(1, MathContext.DECIMAL64), BigDecimal::multiply);
 
-        return new BigDecimal(Math.pow(multipliedTotal.doubleValue(), 1 / size), MathContext.DECIMAL64);
+        return new BigDecimal(Math.pow(multipliedTotal.doubleValue(), 1 / stockPrices.size()), MathContext.DECIMAL64);
     }
 }

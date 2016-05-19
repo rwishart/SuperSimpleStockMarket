@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Concrete representation of a trade conducted on the SuperSimpleStockExchange.
+ * Concrete representation of a Trade conducted on the SuperSimpleStockExchange.
  * <p/>
  * Trades record:
  * <ul>
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  *     <li>the price of the stock</li>
  * </ul>
  * <p/>
- * All trades are assumed to be conducted in Pounds Sterling.
+ * All trades are assumed to be conducted in GBP.
  *
  * @author Ryan Wishart
  */
@@ -64,6 +64,14 @@ public class Trade {
         return timestamp;
     }
 
+    /**
+     * Equals method for a trade. Used to determine equality with a parameter object.
+     * <p/>
+     * The method returns a boolean indicating if the objects are equal (true) or not (false).
+     *
+     * @param o - the Object to compare against
+     * @return  - boolean value indicating if this Trade is equal to the parameter Object o.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -79,6 +87,11 @@ public class Trade {
 
     }
 
+    /**
+     * Method to calculate a hashcode value for this Trade object.
+     *
+     * @return - int value representing a hashcode value.
+     */
     @Override
     public int hashCode() {
         int result = stockSymbol.hashCode();
@@ -89,6 +102,11 @@ public class Trade {
         return result;
     }
 
+    /**
+     * Method to generate a String value for representing this Trade.
+     *
+     * @return - a String representing the stringified members of this Trade.
+     */
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Trade{");

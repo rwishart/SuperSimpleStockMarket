@@ -32,9 +32,9 @@ class SuperSimpleStockMarketImpl implements SuperSimpleStockMarket {
     /**
      * Constructor for the SuperSimpleStockMarketImpl
      *
-     * @param tradeDataService               - an instance of TradeDataService
-     * @param stockMarketCalculationService  - an instance of the StockMarketCalculationService
-     * @param stockListing                   - an instance of a StockListing
+     * @param tradeDataService               - An instance of TradeDataService
+     * @param stockMarketCalculationService  - An instance of the StockMarketCalculationService
+     * @param stockListing                   - An instance of a StockListing
      */
     SuperSimpleStockMarketImpl(final TradeDataService tradeDataService,
                                final StockMarketCalculationService stockMarketCalculationService,
@@ -96,7 +96,7 @@ class SuperSimpleStockMarketImpl implements SuperSimpleStockMarket {
     }
 
     /**
-     * Method to validate that the parameter stockSymbol is present in the stockListing.
+     * Method to validate that the parameter stockSymbol is not null && present in the stockListing.
      * <p/>
      *
      * @throws IllegalArgumentException - if the parameter stock symbol is not listed in the stockListing.
@@ -104,7 +104,7 @@ class SuperSimpleStockMarketImpl implements SuperSimpleStockMarket {
      */
     private void validateStockSymbol(String stockSymbol) {
 
-        if (!stockListing.isListedStock(stockSymbol))
+        if (stockSymbol == null || !stockListing.isListedStock(stockSymbol))
             throw new IllegalArgumentException(String.format("Invalid stock symbol provided. The parameter stock symbol (%s) is not " +
                     "registered at the stock exchange.", stockSymbol));
     }

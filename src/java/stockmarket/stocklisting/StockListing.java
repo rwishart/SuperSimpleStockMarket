@@ -42,7 +42,7 @@ public interface StockListing {
      * <p/>
      * If there is already a stock listed with the same stockSymbol, the new stock replaces the old.
      *
-     * @param stockSymbol - the stock to list on the stock exchange.
+     * @param stockSymbol - The stock to list on the stock exchange.
      */
     void listStock(Stock stockSymbol);
 }

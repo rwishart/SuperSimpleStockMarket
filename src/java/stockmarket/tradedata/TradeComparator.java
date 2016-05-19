@@ -22,14 +22,14 @@ public class TradeComparator implements Comparator<Trade> {
     @Override
     public int compare(Trade left, Trade right) {
 
-        if (left == null && right != null)
-            return -1;
-
-        if (right == null && left != null)
-            return 1;
-
         if (right == left && right == null)
             return 0;
+
+        if (left == null)
+            return -1;
+
+        if (right == null)
+            return 1;
 
         if (left.equals(right)) {
             return 0;
