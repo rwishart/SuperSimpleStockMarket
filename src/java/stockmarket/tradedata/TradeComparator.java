@@ -5,19 +5,19 @@ import stockmarket.trade.Trade;
 import java.util.Comparator;
 
 /**
- * Comparator to use when sorting the ConcurrentSkipListSet used for storing {@link Trade} objects.
+ * Comparator to use when sorting {@link Trade} objects.
  *
  * @author Ryan Wishart
  */
 public class TradeComparator implements Comparator<Trade> {
 
     /**
-     * The comparator compares to Trades (left and right). The value returned is in the range [-1,1]
+     * The comparator compares two Trades (left and right). The value returned is in the range [-1,1]
      * with -1 if left is less than right, 0 if they are equal and 1 if right > left.
      *
-     * @param left  - the first trade object to compare
-     * @param right - the second trade object to compare
-     * @return      - result of the comparison.
+     * @param left  - The first trade object to compare
+     * @param right - The second trade object to compare
+     * @return      - An int value giving the result of the comparison.
      */
     @Override
     public int compare(Trade left, Trade right) {

@@ -126,7 +126,7 @@ public class TestSuperSimpleStockMarketImpl {
     }
 
     /**
-     * Validate that trades can be recorded.
+     * Validate that Trades can be recorded.
      */
     @Test
     public void testRecordTrade() {

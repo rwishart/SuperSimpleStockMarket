@@ -56,13 +56,16 @@ public class ITSuperSimpleStockMarket {
     @Test
     public void testCalculateDividendYieldForStock() {
 
+        //TEA is a common stock with last dividend == 0
         BigDecimal calculatedValue = simpleStockMarket.calculateDividendYieldForStock("TEA", BigDecimal.TEN);
         assertEquals(BigDecimal.ZERO, calculatedValue);
 
+        //POP stock is a common stock with last dividend of 0.08
         calculatedValue = simpleStockMarket.calculateDividendYieldForStock("POP", BigDecimal.TEN);
         Stock popStock = listing.getListedStock("POP");
         assertEquals(popStock.getLastDividend().divide(BigDecimal.TEN, MathContext.DECIMAL64), calculatedValue);
 
+        //GIN stock is a PreferredStock with a fixed dividend of 0.02
         calculatedValue = simpleStockMarket.calculateDividendYieldForStock("GIN", BigDecimal.TEN);
 
         PreferredStock ginStock = (PreferredStock) listing.getListedStock("GIN");
@@ -111,16 +114,10 @@ public class ITSuperSimpleStockMarket {
     @Test
     public void testCalculationOfGBCEAllShareIndex() {
 
-        generateAndRegisterTradesForStock("TEA");
-        generateAndRegisterTradesForStock("POP");
-        generateAndRegisterTradesForStock("ALE");
-        generateAndRegisterTradesForStock("GIN");
-        generateAndRegisterTradesForStock("JOE");
-
+        //Calculate using share price of 1 for all five stocks
         BigDecimal calculatedValue = simpleStockMarket.calculateGBCEAllShareIndex();
 
-        double base = 5 * 100;
-        BigDecimal expectedValue = new BigDecimal(Math.pow(base, 1/5), MathContext.DECIMAL64);
+        BigDecimal expectedValue = new BigDecimal(Math.pow(5, 1/5), MathContext.DECIMAL64);
 
         assertEquals(expectedValue, calculatedValue);
     }
@@ -132,7 +129,6 @@ public class ITSuperSimpleStockMarket {
     public void testCalculatePERatioForStock() {
 
         simpleStockMarket.calculatePERatioForStock("TEA", BigDecimal.TEN);
-
     }
 
     /**

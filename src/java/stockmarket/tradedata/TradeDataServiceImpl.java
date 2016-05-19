@@ -37,19 +37,19 @@ public class TradeDataServiceImpl implements TradeDataService {
     @Override
     public void recordTrade(Trade trade) {
 
-        if(trade == null) {
+        if (trade == null) {
             throw new IllegalArgumentException("Null parameter passed to the recordTrade method. This is an illegal argument.");
         }
 
         String stockSymbol = trade.getStockSymbol();
 
-        if(tradeStore.containsKey(stockSymbol)) {
+        if (tradeStore.containsKey(stockSymbol)) {
 
             log.log(Level.ALL, String.format("The trade store contains the stockSymbol %s. Adding trade to existing set of trades",
                     trade.getStockSymbol()));
             Set<Trade> trades = tradeStore.get(stockSymbol);
 
-            if(trades != null) {
+            if (trades != null) {
                 trades.add(trade);
             } else {
                 throw new IllegalStateException(String.format("Trade store data is incomplete. " +
@@ -67,20 +67,20 @@ public class TradeDataServiceImpl implements TradeDataService {
 
     @Override
     public Set<Trade> getTradesForStockInInterval(final String stockSymbol,
-                                                         final LocalDateTime intervalStart,
-                                                         final LocalDateTime intervalEnd) {
+                                                  final LocalDateTime intervalStart,
+                                                  final LocalDateTime intervalEnd) {
 
         Set<Trade> tradesInInterval = new LinkedHashSet<>();
 
-        if(tradeStore.containsKey(stockSymbol)) {
+        if (tradeStore.containsKey(stockSymbol)) {
             Set<Trade> tradesForStock = tradeStore.get(stockSymbol);
 
-            for(Trade trade : tradesForStock) {
-                if(timestampInInterval(trade.getTimestamp(), intervalStart, intervalEnd)) {
+            for (Trade trade : tradesForStock) {
+                if (timestampInInterval(trade.getTimestamp(), intervalStart, intervalEnd)) {
                     log.log(Level.ALL, String.format("Timestamp %s is in interval (%s, %s)", trade.getTimestamp(), intervalStart, intervalEnd));
                     tradesInInterval.add(trade);
 
-                } else if (trade.getTimestamp().isAfter(intervalEnd)){ //we have passed the end of our interval. End the search.
+                } else if (trade.getTimestamp().isAfter(intervalEnd)) { //we have passed the end of our interval. End the search.
                     log.log(Level.ALL, String.format("Timestamp %s is after end of interval %s so exiting.", trade.getTimestamp(), intervalEnd));
                     break;
                 }

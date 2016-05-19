@@ -99,8 +99,8 @@ class SuperSimpleStockMarketImpl implements SuperSimpleStockMarket {
      * Method to validate that the parameter stockSymbol is not null && present in the stockListing.
      * <p/>
      *
-     * @throws IllegalArgumentException - if the parameter stock symbol is not listed in the stockListing.
-     * @param stockSymbol               - the stock symbol to validate in stockListing.
+     * @throws IllegalArgumentException - If the parameter stock symbol is not listed in the stockListing.
+     * @param stockSymbol               - The stock symbol to validate in stockListing.
      */
     private void validateStockSymbol(String stockSymbol) {
 

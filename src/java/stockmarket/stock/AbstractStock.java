@@ -69,7 +69,7 @@ abstract class AbstractStock implements Stock {
     public BigDecimal getStockPrice() { return stockPrice; }
 
     /**
-     * This method validates that a parameter BigDecimal value is (1) not null and (2) not negative or zero.
+     * This method validates that a parameter BigDecimal value is (1) not null, (2) not negative and (3) not zero.
      * <p/>
      * If these conditions are not met, an {@link IllegalArgumentException} is thrown.
      *
@@ -79,13 +79,14 @@ abstract class AbstractStock implements Stock {
     protected void validatePrice(BigDecimal price) {
 
         if (price == null || price.compareTo(BigDecimal.ZERO) <= 0) {
-            log.log(Level.ALL, "Illegal price value provided.");
+            log.log(Level.ALL, "Illegal price value provided. Price is null, zero or negative.");
             throw new IllegalArgumentException("Illegal argument price value provided. Price must be non-null and greater than zero.");
         }
     }
 
     /**
      * Generate a String representation of the object.
+     *
      * @return - A String representation of the object.
      */
     @Override

@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 /**
- * Unit Test for the {@link SimpleStockListing}. Exercises all the class methods.
+ * Unit Test for the {@link SimpleStockListing}. Exercises all the interface methods.
  *
  * @author Ryan Wishart
  */
@@ -48,7 +48,7 @@ public class TestSimpleStockListing {
     }
 
     /**
-     * Test that all listed stocks are retrieved on a call to {@link SimpleStockListing#getAllListedStock}.
+     * Test that all listed Stocks are retrieved on a call to {@link SimpleStockListing#getAllListedStock}.
      */
     @Test
     public void testGetAllListedStock() {

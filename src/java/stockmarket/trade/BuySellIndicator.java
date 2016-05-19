@@ -8,6 +8,6 @@ package stockmarket.trade;
  */
 public enum BuySellIndicator {
 
-    BUY,
-    SELL
+    BUY, //The trade is a buy
+    SELL //The trade is a sell
 }

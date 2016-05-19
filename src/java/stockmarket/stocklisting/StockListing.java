@@ -22,9 +22,9 @@ public interface StockListing {
     boolean isListedStock(String stockSymbol);
 
     /**
-     * Method to retrieve a stock object listed on the stock exchange.
+     * Method to retrieve a {@link Stock} object listed on the stock exchange.
      *
-     * @param stockSymbol - Stock symbol of the stock to retrieve.
+     * @param stockSymbol - Stock symbol of the {@link Stock} to retrieve.
      * @return            - Returns a {@link Stock} object representing the stock with the parameter stock symbol.
      *                      If the stock symbol is not found, null is returned.
      */

@@ -15,12 +15,12 @@ import java.util.logging.Level;
 public class CommonStock extends AbstractStock {
 
     /**
-     * Constructor for a CommonStock object.
+     * Constructor for a CommonStock object. All monetary amounts are given in GBP.
      *
-     * @param stockSymbol   - the identifier for the stock.
-     * @param lastDividend  - the last dividend payed for the stock
-     * @param parValue      - the par value for the stock
-     * @param stockPrice    - the price of the stock in GBP
+     * @param stockSymbol   - The identifier for the stock.
+     * @param lastDividend  - The last dividend payed for the stock
+     * @param parValue      - The par value for the stock
+     * @param stockPrice    - The price of the stock in GBP
      */
     public CommonStock(final String stockSymbol,
                        final BigDecimal lastDividend,
@@ -36,8 +36,8 @@ public class CommonStock extends AbstractStock {
      *
      * Common stock use the formula:  dividend yield = last dividend / price.
      *
-     * @param price - a non-null, non-zero, non-negative decimal value representing the price for the stock.
-     * @return      - the calculated dividend yield for ths stock.
+     * @param price - A non-null, non-zero, non-negative decimal value representing the price for the stock.
+     * @return      - The calculated dividend yield for ths stock.
      */
     @Override
     public BigDecimal calculateDividendYield(final BigDecimal price) {

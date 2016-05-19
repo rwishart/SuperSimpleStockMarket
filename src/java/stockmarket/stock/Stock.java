@@ -15,8 +15,8 @@ public interface Stock {
     /**
      * This method takes a parameter price and returns the calculated dividend yield value.
      *
-     * @param price  - value representing the price of the stock.
-     * @return       - value representing the calculated dividend yield value.
+     * @param price  - Value representing the price of the stock.
+     * @return       - Value representing the calculated dividend yield value.
      */
     BigDecimal calculateDividendYield(final BigDecimal price);
 

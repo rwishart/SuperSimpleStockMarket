@@ -65,7 +65,7 @@ public class Trade {
     }
 
     /**
-     * Equals method for a trade. Used to determine equality with a parameter object.
+     * Equals method for a {@link Trade}. Used to determine equality with a parameter object.
      * <p/>
      * The method returns a boolean indicating if the objects are equal (true) or not (false).
      *
@@ -103,7 +103,7 @@ public class Trade {
     }
 
     /**
-     * Method to generate a String value for representing this Trade.
+     * Method to generate a String value representing this Trade.
      *
      * @return - a String representing the stringified members of this Trade.
      */

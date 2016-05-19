@@ -30,7 +30,7 @@ public class TestCommonStock {
     }
 
     /**
-     * Verify that a CommonStock can calculate a its dividend given a price.
+     * Verify that a CommonStock can calculate its dividend given a price.
      */
     @Test
     public void testCalculateDividendYield() {

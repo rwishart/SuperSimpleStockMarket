@@ -40,7 +40,7 @@ public class TestStockMarketCalculationService {
      * Validate that Volume Weighted stock price on an empty set returns zero
      */
     @Test
-    public void testVolumeWeightedStockPriceEmptyCollection() {
+    public void testVolumeWeightedStockPriceEmptySet() {
 
         BigDecimal calculatedPrice = calculationService.calculateVolumeWeightedStockPrice(Sets.newSet());
 
